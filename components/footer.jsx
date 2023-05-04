@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
 import Wrapper from "./Wrapper";
@@ -79,16 +80,24 @@ const Footer = () => {
 
                 {/* RIGHT START */}
                 <div className="flex gap-4 justify-center md:justify-start">
-                    <div onClick={()=>window.open("https://www.facebook.com/nike/" , "__blank")} className="w-10 h-10 rounded-full bg-white/[0.25] flex items-center justify-center text-black hover:bg-white/[0.5] cursor-pointer">
+                    <div
+                        onClick={() =>
+                            window.open("https://facebook.com", "_blank")
+                        }
+                        className="w-10 h-10 rounded-full bg-white/[0.25] flex items-center justify-center text-black hover:bg-white/[0.5] cursor-pointer"
+                    >
                         <FaFacebookF size={20} />
                     </div>
-                    <div onClick={()=>{window.open("https://twitter.com/nikestore","_blank")}} className="w-10 h-10 rounded-full bg-white/[0.25] flex items-center justify-center text-black hover:bg-white/[0.5] cursor-pointer">
+                    <Link
+                        href="https://twitter.com"
+                        className="w-10 h-10 rounded-full bg-white/[0.25] flex items-center justify-center text-black hover:bg-white/[0.5] cursor-pointer"
+                    >
                         <FaTwitter size={20} />
-                    </div>
-                    <div onClick={()=>{window.open("https://www.youtube.com/user/nike/videos","_blank")}} className="w-10 h-10 rounded-full bg-white/[0.25] flex items-center justify-center text-black hover:bg-white/[0.5] cursor-pointer">
+                    </Link>
+                    <div className="w-10 h-10 rounded-full bg-white/[0.25] flex items-center justify-center text-black hover:bg-white/[0.5] cursor-pointer">
                         <FaYoutube size={20} />
                     </div>
-                    <div onClick={()=>{window.open("https://www.instagram.com/nike/","_blank")}} className="w-10 h-10 rounded-full bg-white/[0.25] flex items-center justify-center text-black hover:bg-white/[0.5] cursor-pointer">
+                    <div className="w-10 h-10 rounded-full bg-white/[0.25] flex items-center justify-center text-black hover:bg-white/[0.5] cursor-pointer">
                         <FaInstagram size={20} />
                     </div>
                 </div>
@@ -121,5 +130,6 @@ const Footer = () => {
         </footer>
     );
 };
+
 
 export default Footer;
