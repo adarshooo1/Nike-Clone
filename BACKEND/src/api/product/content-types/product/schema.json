@@ -44,7 +44,6 @@
       "type": "media",
       "multiple": false,
       "required": true,
-      "private": true,
       "allowedTypes": [
         "images"
       ]
