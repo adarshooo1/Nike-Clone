@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Wrapper from '@/components/Wrapper';
 import { IoMdHeartEmpty} from 'react-icons/io';
 import ProductDetailsCarousel from '@/components/ProductDetailsCarousel';
 import RelatedProducts from '@/components/RelatedProduct';
 import { fetchDataFromApi } from '@/utils/api';
-
+import { getDiscountedPricePercentage } from '@/utils/helper';
 
 const ProductDetails = ({product , products}) => {
+
+    const [selectedSize, setSelectedSize] = useState();
+    const [showError , setShowError] = useState(false);
+
     const p = product?.data?.[0]?.attributes;
 
 
@@ -26,20 +30,30 @@ const ProductDetails = ({product , products}) => {
                     <div className="flex-[1] py-3">
                         {/* PRODUCT TITLE */}
                         <div className="text-[34px] font-semibold mb-2 leading-tight">
-                            JORDAN RETRO 6 G
+                            {p.name}
                         </div>
 
                         {/* PRODUCT SUBTITLE */}
                         <div className="text-lg font-semibold mb-5">
-                            Men&apos;s Golf Shoes
+                            {p.subtitle}
                         </div>
 
                         {/* PRODUCT PRICE */}
-                        <div className="flex items-center">
-                                MRP : ₹ 19 695.00
-                            <p className="mr-2 text-lg font-semibold">
-                            </p>
-
+                        <div className='flex items-center text-black/[0.5]'>
+                            <p className='mr-2 text-lg font-semibold'>&#8377;{p.price}</p>
+                            
+                            {p.original_price && (
+                            <>
+                                <p className='text-base font-medium line-through'>&#8377;{p.original_price}</p>
+                                <p className='ml-auto text-base font-medium text-green-400'>
+                                {getDiscountedPricePercentage(
+                                    p.original_price,
+                                    p.price
+                                    )}
+                                    % off
+                                </p>
+                            </>
+                            )}
                         </div>
 
                         <div className="text-md font-medium text-black/[0.5]">
@@ -64,7 +78,21 @@ const ProductDetails = ({product , products}) => {
 
                             {/* SIZE START */}
                             <div className="grid grid-cols-3 gap-2">
-                                <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
+
+                                {p.size.data.map((item,i)=>(
+                                    <div key={i} className={`border rounded-md text-center py-3 font-medium ${item.enabled ? "hover:border-black cursor-pointer" : " bg-black/[0.1] opacity-50"}
+                                    ${selectedSize === item.size ? "border-black" : ""}`}
+                                    // To select size when we click
+                                    onClick={()=>{
+                                        setSelectedSize(item.size)
+                                        setShowError(false)
+                                    }}
+                                    >
+                                        {item.size}
+                                    </div>
+                                ))}
+
+                                {/* <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
                                     UK 6
                                 </div>
                                 <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
@@ -108,22 +136,31 @@ const ProductDetails = ({product , products}) => {
                                 </div>
                                 <div className='border rounded-md text-center py-3 font-medium  cursor-not-allowed bg-black/[0.1] opacity-50'>
                                     UK 13
-                                </div>
+                                </div> */}
                             </div>
                             {/* SIZE END */}
 
                             {/* SHOW ERROR START */}
 
-                                <div className="text-red-600 mt-1">
+                                {showError && <div className="text-red-600 mt-1">
                                     Size selection is required
-                                </div>
+                                </div>}
 
                             {/* SHOW ERROR END */}
                         </div>
                         {/* PRODUCT SIZE RANGE END */}
 
                         {/* ADD TO CART BUTTON START */}
-                        <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75" >
+                        <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75"
+                        //Set error when we do not select and size and try to press add to cart button;
+                            onClick={()=>{
+                                if(!selectedSize){
+                                    setShowError(true);
+                                }
+                                else{
+                                    setShowError(false);
+                                }
+                            }} >
                             Add to Cart
                         </button>
                         {/* ADD TO CART BUTTON END */}
