@@ -3,9 +3,12 @@ import Wrapper from '@/components/Wrapper';
 import { IoMdHeartEmpty} from 'react-icons/io';
 import ProductDetailsCarousel from '@/components/ProductDetailsCarousel';
 import RelatedProducts from '@/components/RelatedProduct';
+import { fetchDataFromApi } from '@/utils/api';
 
 
-const ProductDetails = () => {
+const ProductDetails = ({product , products}) => {
+    const p = product?.data?.[0]?.attributes;
+
 
     return (
         <div className="w-full md:py-20">
@@ -15,7 +18,7 @@ const ProductDetails = () => {
                     
                     {/* left column start */}
                     <div className="w-full md:w-auto flex-[1.5] max-w-[500px] lg:max-w-full mx-auto lg:mx-0">
-                        <ProductDetailsCarousel />
+                        <ProductDetailsCarousel images = {p.image.data} />
                     </div>
                     {/* left column end */}
 
@@ -147,7 +150,7 @@ const ProductDetails = () => {
                     {/* right column end */}
                 </div>
 
-                <RelatedProducts />
+                {/* <RelatedProducts /> */}
 
             </Wrapper>
         </div>
@@ -155,3 +158,32 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+
+// Generates Paths
+export async function getStaticPaths() {
+    //Here we generate all the path of the categories;
+    const products = await fetchDataFromApi('/api/products?populate=*')
+
+    const paths = products?.data?.map((p) => ({
+        params: {
+            slug: p.attributes.slug,
+        },
+    }));
+    return {
+        paths,
+        fallback:false
+    }
+  }
+
+  // `getStaticPaths` requires using `getStaticProps`
+export async function getStaticProps({ params: { slug } }) {
+    const product = await fetchDataFromApi(`/api/products?populate=*&filters[slug][$eq]=${slug}`);
+    const products = await fetchDataFromApi(`/api/products?populate=*&[filters][slug][$ne]=${slug}`);
+
+    return {
+        props: {
+            product,
+            products,
+        },
+    };
+}

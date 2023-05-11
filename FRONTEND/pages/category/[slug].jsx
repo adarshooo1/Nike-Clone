@@ -1,18 +1,23 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import Wrapper from '@/components/Wrapper'
 import { fetchDataFromApi } from '@/utils/api'
 import ProductCard from '@/components/ProductCard'
-// import { Router, useRouter } from 'next/router'
+import { Router, useRouter } from 'next/router'
 import useSWR from 'swr'
 const maxResult = 3;
 
 
 const Category = ({ category, products, slug }) => {
-    const [pageIndex, setPageIndex] = useState(1)
+    const [pageIndex, setPageIndex] = useState(1);
+    const {query} = useRouter();
 
-    const {data, error, isLoading} = useSWR(`/api/products?populate=*&[filters][categories][slug][$eq]=${slug}&pagination[page]=${pageIndex}&pagination[pageSize]=${maxResult}`, fetchDataFromApi, {fallback : products})
+    useEffect(() =>{
+        setPageIndex(1)
+    },[query])
+
+    const {data, error, isLoading} = useSWR(`/api/products?populate=*&[filters][categories][slug][$eq]=${slug}&pagination[page]=${pageIndex}&pagination[pageSize]=${maxResult}`, fetchDataFromApi, {fallbackData : products})
     return (
-        <div className='w-full md:py-20'>
+        <div className='w-full md:py-20 relative'>
             <Wrapper>
                 <div className='text-center max-w-[800px] mx-auto mt-8 md:mt-0'>
                     <div className='text-[28] md:text-[34px] mb-5 font-semibold leading-tight'>

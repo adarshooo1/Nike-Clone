@@ -9,7 +9,7 @@ import { getDiscountedPricePercentage } from '@/utils/helper'
 const ProductCard = ({data: {attributes: p, id}}) => {
 
   return (
-    <Link href={`/products/${p.slug}`} className='transform overflow-hidden bg-white duration-200 hover:scale-105'>
+    <Link href={`/product/${p.slug}`} className='transform overflow-hidden bg-white duration-200 hover:scale-105'>
 
         {/*This image tag have no use because we use image from te backend*/}
         {/* <img className='w-full' src="/product-1.webp" alt="Product Image" /> */}
