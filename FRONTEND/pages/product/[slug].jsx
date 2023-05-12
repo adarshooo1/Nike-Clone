@@ -5,13 +5,17 @@ import ProductDetailsCarousel from '@/components/ProductDetailsCarousel';
 import RelatedProducts from '@/components/RelatedProduct';
 import { fetchDataFromApi } from '@/utils/api';
 import { getDiscountedPricePercentage } from '@/utils/helper';
-import ReactMarkdown from  "react-markdown"
+import ReactMarkdown from  "react-markdown";
+import {useSelector, useDispatch} from 'react-redux'
+import { addToCart } from '@/store/cartSlice';
+
+
 
 const ProductDetails = ({product , products}) => {
 
     const [selectedSize, setSelectedSize] = useState();
     const [showError , setShowError] = useState(false);
-
+    const dispatch = useDispatch();
     const p = product?.data?.[0]?.attributes;
 
 
@@ -115,9 +119,7 @@ const ProductDetails = ({product , products}) => {
                                         behavior: "smooth",
                                     })
                                 }
-                                else{
-                                    setShowError(false);
-                                }
+                                dispatch(addToCart("product 1"))
                             }} >
                             Add to Cart
                         </button>
