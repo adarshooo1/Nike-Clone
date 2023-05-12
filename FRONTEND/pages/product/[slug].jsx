@@ -5,6 +5,7 @@ import ProductDetailsCarousel from '@/components/ProductDetailsCarousel';
 import RelatedProducts from '@/components/RelatedProduct';
 import { fetchDataFromApi } from '@/utils/api';
 import { getDiscountedPricePercentage } from '@/utils/helper';
+import ReactMarkdown from  "react-markdown"
 
 const ProductDetails = ({product , products}) => {
 
@@ -77,11 +78,10 @@ const ProductDetails = ({product , products}) => {
                             {/* HEADING END */}
 
                             {/* SIZE START */}
-                            <div className="grid grid-cols-3 gap-2">
+                            <div id = "sizesGrid" className="grid grid-cols-3 gap-2">
 
                                 {p.size.data.map((item,i)=>(
-                                    <div key={i} className={`border rounded-md text-center py-3 font-medium ${item.enabled ? "hover:border-black cursor-pointer" : " bg-black/[0.1] opacity-50"}
-                                    ${selectedSize === item.size ? "border-black" : ""}`}
+                                    <div key={i} className={`border rounded-md text-center py-3 font-medium ${item.enabled ? "hover:border-black cursor-pointer" : " bg-black/[0.1] opacity-50 cursor-not-allowed"} ${selectedSize === item ? "border-black" : ""}`}
                                     // To select size when we click
                                     onClick={()=>{
                                         setSelectedSize(item.size)
@@ -91,52 +91,6 @@ const ProductDetails = ({product , products}) => {
                                         {item.size}
                                     </div>
                                 ))}
-
-                                {/* <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
-                                    UK 6
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
-                                    UK 6.5
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
-                                    UK 7
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
-                                    UK 7.5
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
-                                    UK 8
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
-                                    UK 8.5
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
-                                    UK 9
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
-                                    UK 9.5
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
-                                    UK 10
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
-                                    UK 10.5
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium hover:border-black cursor-pointer'>
-                                    UK 11
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium  cursor-not-allowed bg-black/[0.1] opacity-50'>
-                                    UK 11.5
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium  cursor-not-allowed bg-black/[0.1] opacity-50'>
-                                    UK 12
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium  cursor-not-allowed bg-black/[0.1] opacity-50'>
-                                    UK 12.5
-                                </div>
-                                <div className='border rounded-md text-center py-3 font-medium  cursor-not-allowed bg-black/[0.1] opacity-50'>
-                                    UK 13
-                                </div> */}
                             </div>
                             {/* SIZE END */}
 
@@ -144,7 +98,7 @@ const ProductDetails = ({product , products}) => {
 
                                 {showError && <div className="text-red-600 mt-1">
                                     Size selection is required
-                                </div>}
+                                              </div>}
 
                             {/* SHOW ERROR END */}
                         </div>
@@ -155,7 +109,11 @@ const ProductDetails = ({product , products}) => {
                         //Set error when we do not select and size and try to press add to cart button;
                             onClick={()=>{
                                 if(!selectedSize){
-                                    setShowError(true);
+                                    setShowError(true)
+                                    document.getElementById("sizesGrid").scrollIntoView({
+                                        block : "center",
+                                        behavior: "smooth",
+                                    })
                                 }
                                 else{
                                     setShowError(false);
@@ -177,17 +135,14 @@ const ProductDetails = ({product , products}) => {
                                 Product Details
                             </div>
                             <div className="markdown text-md mb-5">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam facere ipsum ipsam, nostrum dolor eos laudantium minus incidunt, illum doloremque a eligendi veritatis harum sed asperiores unde, excepturi tempora. Molestias quaerat nobis veritatis sed maxime hic ex quae dolorem ipsam deleniti esse necessitatibus, sequi alias neque blanditiis quidem laudantium adipisci!
-                            </div>
-                            <div className="markdown text-md mb-5">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam facere ipsum ipsam, nostrum dolor eos laudantium minus incidunt, illum doloremque a eligendi veritatis harum sed asperiores unde, excepturi tempora. Molestias quaerat nobis veritatis sed maxime hic ex quae dolorem ipsam deleniti esse necessitatibus, sequi alias neque blanditiis quidem laudantium adipisci!
+                                <ReactMarkdown>{p.description}</ReactMarkdown>
                             </div>
                         </div>
                     </div>
                     {/* right column end */}
                 </div>
 
-                {/* <RelatedProducts /> */}
+                <RelatedProducts  products={products}/>
 
             </Wrapper>
         </div>

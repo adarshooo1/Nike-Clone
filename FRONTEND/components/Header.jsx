@@ -17,7 +17,7 @@ const Header = () => {
   const[showCatMenu , setShowCatMenu] = useState(false);
   const[show , setShow] = useState("translate-y-0");
   const[lastScrollY , setLastScrollY] = useState(0);
-  const [categories, setCategories] = useState(null);
+  const[categories, setCategories] = useState(null);
 
   const controlNavbar =() =>{
     if(window.scrollY > 200){
@@ -65,7 +65,7 @@ const Header = () => {
         {mobileMenu && <MenuMobile
         showCatMenu={showCatMenu}
         setShowCatMenu= {setShowCatMenu}
-        setMobileMenu =  {setMobileMenu}
+        setMobileMenu = {setMobileMenu}
         categories = {categories}
 
         />}
