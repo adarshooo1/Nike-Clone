@@ -118,8 +118,12 @@ const ProductDetails = ({product , products}) => {
                                         block : "center",
                                         behavior: "smooth",
                                     })
+                                } else{
+                                    dispatch(addToCart({
+                                        ...product?.data?.[0],
+                                        selectedSize,
+                                    }))
                                 }
-                                dispatch(addToCart("product 1"))
                             }} >
                             Add to Cart
                         </button>
