@@ -9,6 +9,8 @@ import ReactMarkdown from  "react-markdown";
 import {useSelector, useDispatch} from 'react-redux'
 import { addToCart } from '@/store/cartSlice';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const ProductDetails = ({product , products}) => {
@@ -18,9 +20,22 @@ const ProductDetails = ({product , products}) => {
     const dispatch = useDispatch();
     const p = product?.data?.[0]?.attributes;
 
+    const notify = () =>{
+        toast.success('Success. Check Your Cart', {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            });
+    }
 
     return (
         <div className="w-full md:py-20">
+            <ToastContainer />
             <Wrapper>
 
                 <div className="flex flex-col lg:flex-row md:px-10 gap-[50px] lg:gap-[100px]">
@@ -84,13 +99,22 @@ const ProductDetails = ({product , products}) => {
                             {/* SIZE START */}
                             <div id = "sizesGrid" className="grid grid-cols-3 gap-2">
 
-                                {p.size.data.map((item,i)=>(
-                                    <div key={i} className={`border rounded-md text-center py-3 font-medium ${item.enabled ? "hover:border-black cursor-pointer" : " bg-black/[0.1] opacity-50 cursor-not-allowed"} ${selectedSize === item ? "border-black" : ""}`}
-                                    // To select size when we click
-                                    onClick={()=>{
-                                        setSelectedSize(item.size)
-                                        setShowError(false)
-                                    }}
+                            {p.size.data.map((item, i) => (
+                                    <div
+                                        key={i}
+                                        className={`border rounded-md text-center py-3 font-medium ${
+                                            item.enabled
+                                                ? "hover:border-black cursor-pointer"
+                                                : "cursor-not-allowed bg-black/[0.1] opacity-50 border-none"
+                                        } ${
+                                            selectedSize === item.size
+                                                ? "border-black"
+                                                : ""
+                                        }`}
+                                        onClick={() => {
+                                            setSelectedSize(item.size);
+                                            setShowError(false);
+                                        }}
                                     >
                                         {item.size}
                                     </div>
@@ -122,8 +146,10 @@ const ProductDetails = ({product , products}) => {
                                     dispatch(addToCart({
                                         ...product?.data?.[0],
                                         selectedSize,
+                                        oneQuantityPrice: p.price,
                                     }))
-                                }
+                                };
+                                notify();
                             }} >
                             Add to Cart
                         </button>
