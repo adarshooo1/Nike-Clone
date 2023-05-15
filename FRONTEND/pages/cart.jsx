@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Wrapper from "@/components/Wrapper";
@@ -9,12 +9,12 @@ const Cart = () => {
     // const [loading, setLoading] = useState(false);
     const { cartItems } = useSelector((state) => state.cart);
 
-    // const subTotal = useMemo(() => {
-    //     return cartItems.reduce(
-    //         (total, val) => total + val.attributes.price,
-    //         0
-    //     );
-    // }, [cartItems]);
+    const subTotal = useMemo(() => {
+        return cartItems.reduce(
+            (total, val) => total + val.attributes.price
+            ,0
+        );
+    }, [cartItems]);
 
     // const handlePayment = async () => {
     //     try {
@@ -67,10 +67,9 @@ const Cart = () => {
                                         <div className="uppercase text-md md:text-lg font-medium text-black">
                                             Subtotal
                                         </div>
-                                        {/* <div className="text-md md:text-lg font-medium text-black">
+                                        <div className="text-md md:text-lg font-medium text-black">
                                             &#8377;{subTotal}
-                                        </div> */}
-                                        ₹ 19 695.00
+                                        </div>
                                     </div>
                                     <div className="text-sm md:text-md py-5 border-t mt-5">
                                         The subtotal reflects the total price of
