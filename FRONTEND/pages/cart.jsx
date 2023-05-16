@@ -1,12 +1,18 @@
-import React, {useMemo} from "react";
+import React, {useMemo , useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Wrapper from "@/components/Wrapper";
 import CartItem from "@/components/CartItem";
 import { useSelector } from "react-redux";
+import { loadStripe } from "@stripe/stripe-js";
+import { makePaymentRequest } from "@/utils/api";
+
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+
 
 const Cart = () => {
-    // const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const { cartItems } = useSelector((state) => state.cart);
 
     const subTotal = useMemo(() => {
@@ -16,21 +22,21 @@ const Cart = () => {
         );
     }, [cartItems]);
 
-    // const handlePayment = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const stripe = await stripePromise;
-    //         const res = await makePaymentRequest("/api/orders", {
-    //             products: cartItems,
-    //         });
-    //         await stripe.redirectToCheckout({
-    //             sessionId: res.stripeSession.id,
-    //         });
-    //     } catch (error) {
-    //         setLoading(false);
-    //         console.log(error);
-    //     }
-    // };
+    const handlePayment = async () => {
+        try {
+            setLoading(true);
+            const stripe = await stripePromise;
+            const res = await makePaymentRequest("/api/orders", {
+                products: cartItems,
+            });
+            await stripe.redirectToCheckout({
+                sessionId: res.stripeSession.id,
+            });
+        } catch (error) {
+            setLoading(false);
+            console.log(error);
+        }
+    };
 
     return (
         <div className="w-full md:py-20">
@@ -83,10 +89,10 @@ const Cart = () => {
                                 {/* BUTTON START */}
                                 <button
                                     className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75 flex items-center gap-2 justify-center"
-                                    // onClick={handlePayment}
+                                    onClick={handlePayment}
                                 >
                                     Checkout
-                                    {/* {loading && <img src="/spinner.svg" />} */}
+                                    {loading && <img src="/spinner.svg" />}
                                 </button>
                                 {/* BUTTON END */}
                             </div>

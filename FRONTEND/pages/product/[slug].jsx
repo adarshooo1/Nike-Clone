@@ -1,48 +1,44 @@
-import React, { useState } from 'react'
-import Wrapper from '@/components/Wrapper';
-import { IoMdHeartEmpty} from 'react-icons/io';
-import ProductDetailsCarousel from '@/components/ProductDetailsCarousel';
-import RelatedProducts from '@/components/RelatedProduct';
-import { fetchDataFromApi } from '@/utils/api';
-import { getDiscountedPricePercentage } from '@/utils/helper';
-import ReactMarkdown from  "react-markdown";
-import {useSelector, useDispatch} from 'react-redux'
-import { addToCart } from '@/store/cartSlice';
+import React, { useState } from "react";
+import { IoMdHeartEmpty } from "react-icons/io";
+import Wrapper from "@/components/Wrapper";
+import ProductDetailsCarousel from "@/components/ProductDetailsCarousel";
+import RelatedProducts from "@/components/RelatedProducts";
+import { fetchDataFromApi } from "@/utils/api";
+import { getDiscountedPricePercentage } from "@/utils/helper";
+import ReactMarkdown from "react-markdown";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart } from "@/store/cartSlice";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-
-const ProductDetails = ({product , products}) => {
-
+const ProductDetails = ({ product, products }) => {
     const [selectedSize, setSelectedSize] = useState();
-    const [showError , setShowError] = useState(false);
+    const [showError, setShowError] = useState(false);
     const dispatch = useDispatch();
     const p = product?.data?.[0]?.attributes;
 
-    const notify = () =>{
-        toast.success('Success. Check Your Cart', {
-            position: "top-center",
-            autoClose: 1000,
+    const notify = () => {
+        toast.success("Success. Check your cart!", {
+            position: "bottom-right",
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
             theme: "dark",
-            });
-    }
+        });
+    };
 
     return (
         <div className="w-full md:py-20">
             <ToastContainer />
             <Wrapper>
-
                 <div className="flex flex-col lg:flex-row md:px-10 gap-[50px] lg:gap-[100px]">
-                    
                     {/* left column start */}
                     <div className="w-full md:w-auto flex-[1.5] max-w-[500px] lg:max-w-full mx-auto lg:mx-0">
-                        <ProductDetailsCarousel images = {p.image.data} />
+                        <ProductDetailsCarousel images={p.image.data} />
                     </div>
                     {/* left column end */}
 
@@ -59,20 +55,23 @@ const ProductDetails = ({product , products}) => {
                         </div>
 
                         {/* PRODUCT PRICE */}
-                        <div className='flex items-center text-black/[0.5]'>
-                            <p className='mr-2 text-lg font-semibold'>&#8377;{p.price}</p>
-                            
+                        <div className="flex items-center">
+                            <p className="mr-2 text-lg font-semibold">
+                                MRP : &#8377;{p.price}
+                            </p>
                             {p.original_price && (
-                            <>
-                                <p className='text-base font-medium line-through'>&#8377;{p.original_price}</p>
-                                <p className='ml-auto text-base font-medium text-green-400'>
-                                {getDiscountedPricePercentage(
-                                    p.original_price,
-                                    p.price
-                                    )}
-                                    % off
-                                </p>
-                            </>
+                                <>
+                                    <p className="text-base  font-medium line-through">
+                                        &#8377;{p.original_price}
+                                    </p>
+                                    <p className="ml-auto text-base font-medium text-green-500">
+                                        {getDiscountedPricePercentage(
+                                            p.original_price,
+                                            p.price
+                                        )}
+                                        % off
+                                    </p>
+                                </>
                             )}
                         </div>
 
@@ -97,15 +96,17 @@ const ProductDetails = ({product , products}) => {
                             {/* HEADING END */}
 
                             {/* SIZE START */}
-                            <div id = "sizesGrid" className="grid grid-cols-3 gap-2">
-
-                            {p.size.data.map((item, i) => (
+                            <div
+                                id="sizesGrid"
+                                className="grid grid-cols-3 gap-2"
+                            >
+                                {p.size.data.map((item, i) => (
                                     <div
                                         key={i}
                                         className={`border rounded-md text-center py-3 font-medium ${
                                             item.enabled
                                                 ? "hover:border-black cursor-pointer"
-                                                : "cursor-not-allowed bg-black/[0.1] opacity-50 border-none"
+                                                : "cursor-not-allowed bg-black/[0.1] opacity-50"
                                         } ${
                                             selectedSize === item.size
                                                 ? "border-black"
@@ -123,34 +124,39 @@ const ProductDetails = ({product , products}) => {
                             {/* SIZE END */}
 
                             {/* SHOW ERROR START */}
-
-                                {showError && <div className="text-red-600 mt-1">
+                            {showError && (
+                                <div className="text-red-600 mt-1">
                                     Size selection is required
-                                              </div>}
-
+                                </div>
+                            )}
                             {/* SHOW ERROR END */}
                         </div>
                         {/* PRODUCT SIZE RANGE END */}
 
                         {/* ADD TO CART BUTTON START */}
-                        <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75"
-                        //Set error when we do not select and size and try to press add to cart button;
-                            onClick={()=>{
-                                if(!selectedSize){
-                                    setShowError(true)
-                                    document.getElementById("sizesGrid").scrollIntoView({
-                                        block : "center",
-                                        behavior: "smooth",
-                                    })
-                                } else{
-                                    dispatch(addToCart({
-                                        ...product?.data?.[0],
-                                        selectedSize,
-                                        oneQuantityPrice: p.price,
-                                    }))
-                                };
-                                notify();
-                            }} >
+                        <button
+                            className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75"
+                            onClick={() => {
+                                if (!selectedSize) {
+                                    setShowError(true);
+                                    document
+                                        .getElementById("sizesGrid")
+                                        .scrollIntoView({
+                                            block: "center",
+                                            behavior: "smooth",
+                                        });
+                                } else {
+                                    dispatch(
+                                        addToCart({
+                                            ...product?.data?.[0],
+                                            selectedSize,
+                                            oneQuantityPrice: p.price,
+                                        })
+                                    );
+                                    notify();
+                                }
+                            }}
+                        >
                             Add to Cart
                         </button>
                         {/* ADD TO CART BUTTON END */}
@@ -174,8 +180,7 @@ const ProductDetails = ({product , products}) => {
                     {/* right column end */}
                 </div>
 
-                <RelatedProducts  products={products}/>
-
+                <RelatedProducts products={products} />
             </Wrapper>
         </div>
     );
@@ -183,26 +188,27 @@ const ProductDetails = ({product , products}) => {
 
 export default ProductDetails;
 
-// Generates Paths
 export async function getStaticPaths() {
-    //Here we generate all the path of the categories;
-    const products = await fetchDataFromApi('/api/products?populate=*')
-
+    const products = await fetchDataFromApi("/api/products?populate=*");
     const paths = products?.data?.map((p) => ({
         params: {
             slug: p.attributes.slug,
         },
     }));
+
     return {
         paths,
-        fallback:false
-    }
-  }
+        fallback: false,
+    };
+}
 
-  // `getStaticPaths` requires using `getStaticProps`
 export async function getStaticProps({ params: { slug } }) {
-    const product = await fetchDataFromApi(`/api/products?populate=*&filters[slug][$eq]=${slug}`);
-    const products = await fetchDataFromApi(`/api/products?populate=*&[filters][slug][$ne]=${slug}`);
+    const product = await fetchDataFromApi(
+        `/api/products?populate=*&filters[slug][$eq]=${slug}`
+    );
+    const products = await fetchDataFromApi(
+        `/api/products?populate=*&[filters][slug][$ne]=${slug}`
+    );
 
     return {
         props: {
